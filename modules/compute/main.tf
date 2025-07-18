@@ -1,13 +1,54 @@
+# Data AMI
+data "aws_ami" "rhel9" {
+  most_recent                   = true
+  owners                        = ["309956199498"] # Red Hat 공식 AWS 계정 ID
+
+  filter {
+    name                        = "name"
+    values                      = ["RHEL-9*_HVM-*"]
+  }
+
+  filter {
+    name                        = "architecture"
+    values                      = ["x86_64"]
+  }
+
+  filter {
+    name                        = "virtualization-type"
+    values                      = ["hvm"]
+  }
+}
+
+data "aws_ami" "amazon_linux_2023" {
+  most_recent                   = true
+  owners                        = ["amazon"]
+
+  filter {
+    name                        = "name"
+    values                      = ["al2023-ami-*-x86_64"]
+  }
+
+  filter {
+    name                        = "architecture"
+    values                      = ["x86_64"]
+  }
+
+  filter {
+    name                        = "virtualization-type"
+    values                      = ["hvm"]
+  }
+}
+
 resource "aws_security_group" "security_group" {
   name        = "${var.instance_config.name}-sg"
-  description = var.security_group_config.description
+  description = var.instance_config.security_group.description
   vpc_id      = var.vpc_id
-  tags        = var.security_group_config.tags
+  tags        = var.instance_config.security_group.tags
 }
 
 resource "aws_vpc_security_group_ingress_rule" "ingress_rules" {
   for_each = {
-    for rule in var.security_group_config.ingress_rules :
+    for rule in var.instance_config.security_group.ingress_rules :
     "${rule.from_port}-${rule.to_port}-${rule.protocol}" => rule
   }
 
@@ -22,14 +63,24 @@ resource "aws_vpc_security_group_ingress_rule" "ingress_rules" {
 }
 
 resource "aws_vpc_security_group_egress_rule" "egress_rule" {
+  for_each = {
+    for rule in var.instance_config.security_group.egress_rules :
+    "${rule.from_port}-${rule.to_port}-${rule.protocol}" => rule
+  }
+
   security_group_id = aws_security_group.security_group.id
-  cidr_ipv4         = "0.0.0.0/0"
-  ip_protocol       = "-1"
+  from_port         = each.value.from_port
+  to_port           = each.value.to_port
+  ip_protocol       = each.value.protocol
+
+  cidr_ipv4                     = try(each.value.cidr_blocks[0], null)
+  referenced_security_group_id = try(each.value.source_sg, null)
+  description                  = try(each.value.description, null)
 }
 
 
 resource "aws_instance" "ec2_instance" {
-  ami                         = var.ami
+  ami                         = coalesce(var.instance_config.ami_id, data.aws_ami.amazon_linux_2023.id)
   instance_type               = var.instance_config.instance_type
   key_name                    = var.ssh_key_name#
   subnet_id                   = var.subnet_id#
