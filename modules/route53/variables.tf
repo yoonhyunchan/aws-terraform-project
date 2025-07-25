@@ -6,6 +6,7 @@ variable "vpc_id" {
 variable "public_hosted_zone_name" {
   description = "The name of the existing public Route 53 hosted zone (e.g., example.com)."
   type        = string
+  default     = null
 }
 
 variable "public_records" {
@@ -21,6 +22,7 @@ variable "public_records" {
 variable "private_hosted_zone_name" {
   description = "The name for the new private Route 53 hosted zone (e.g., internal.example.com)."
   type        = string
+  default     = null
 }
 
 variable "private_records" {

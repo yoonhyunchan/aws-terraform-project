@@ -69,9 +69,9 @@ resource "aws_vpc_security_group_egress_rule" "egress_rule" {
   }
 
   security_group_id = aws_security_group.security_group.id
-  from_port         = each.value.from_port
-  to_port           = each.value.to_port
-  ip_protocol       = each.value.protocol
+  from_port = each.value.protocol == "-1" ? null : try(each.value.from_port, null)
+  to_port   = each.value.protocol == "-1" ? null : try(each.value.to_port, null)
+  ip_protocol       = try(each.value.protocol, null)
 
   cidr_ipv4                     = try(each.value.cidr_blocks[0], null)
   referenced_security_group_id = try(each.value.source_sg, null)
@@ -80,12 +80,13 @@ resource "aws_vpc_security_group_egress_rule" "egress_rule" {
 
 
 resource "aws_instance" "ec2_instance" {
+  count                       = var.instance_config.count
   ami                         = coalesce(var.instance_config.ami_id, data.aws_ami.amazon_linux_2023.id)
   instance_type               = var.instance_config.instance_type
-  key_name                    = var.ssh_key_name#
-  subnet_id                   = var.subnet_id#
-  private_ip                  = var.instance_config.private_ip#
-  associate_public_ip_address = var.instance_config.associate_public_ip_address#
+  key_name                    = var.ssh_key_name
+  subnet_id                   = var.subnet_id
+  private_ip                  = var.instance_config.private_ip
+  associate_public_ip_address = var.instance_config.associate_public_ip_address
   vpc_security_group_ids      = [aws_security_group.security_group.id]
   iam_instance_profile        = var.instance_config.iam_instance_profile
   root_block_device {
