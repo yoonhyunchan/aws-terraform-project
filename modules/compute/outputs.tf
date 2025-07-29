@@ -13,3 +13,4 @@ output "sg_id" {
   description = "Securoty Group"
   value       = aws_security_group.security_group[*].id
 }
+

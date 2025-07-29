@@ -100,7 +100,7 @@ resource "aws_instance" "ec2_instance" {
               EOF
 
   tags = merge(
-  {  Name = var.instance_config.name },
+  { Name = var.instance_config.count == 1 ? var.instance_config.name : "${var.instance_config.name}_${count.index + 1}" },
   var.instance_config.tags
   )
 }

@@ -28,3 +28,6 @@ override.tf.json
 *.swp
 *.bak
 *.tmp
+
+# SSL Certification 파일
+certs

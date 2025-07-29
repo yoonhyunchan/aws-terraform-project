@@ -39,9 +39,6 @@ data "aws_iam_instance_profile" "instance_profile_name_for_k8s_controller" {
 data "aws_iam_instance_profile" "instance_profile_name_for_k8s_compute" {
   name = "AWSEC2InstanceProfileForKubernetesCompute"
 }
-output iam_profile_1 {
-  value       = data.aws_iam_instance_profile.instance_profile_name_for_k8s_controller.name
-}
 
 
 
@@ -110,6 +107,11 @@ module "mgmt_server" {
     name                          = var.mgmt_name
     instance_type                 = var.mgmt_instance_type
     volume_size                   = var.mgmt_volume_size
+    user_data_extra               = <<-EOF
+    echo "Extra user-data starts here"
+    dnf install -y ansible
+    echo "Clone complete"
+  EOF
     security_group = {
       ingress_rules = [
         {
@@ -141,177 +143,177 @@ module "mgmt_server" {
   }
 }
 
-# # Gitlab Server
-# module "gitlab_server" {
-#   source                        = "./modules/compute"
-#   vpc_id                        = module.networking.vpc_id
-#   ssh_key_name                  = module.ssh_key.ssh_key_name
-#   subnet_id                     = module.networking.private_subnet_ids[0]
+# Gitlab Server
+module "gitlab_server" {
+  source                        = "./modules/compute"
+  vpc_id                        = module.networking.vpc_id
+  ssh_key_name                  = module.ssh_key.ssh_key_name
+  subnet_id                     = module.networking.private_subnet_ids[0]
   
-#   instance_config = {
-#     count                         = var.gitlab_count
-#     name                          = var.gitlab_name
-#     instance_type                 = var.gitlab_instance_type
-#     volume_size                   = var.gitlab_volume_size
-#     security_group = {
-#       ingress_rules = [
-#         {
-#           from_port                 = 22
-#           to_port                   = 22
-#           protocol                  = "tcp"
-#           cidr_blocks               = [var.vpc_cidr]
-#         },
-#         {
-#           from_port                 = 80
-#           to_port                   = 80
-#           protocol                  = "tcp"
-#           cidr_blocks               = [var.vpc_cidr]
-#         },
-#         {
-#           from_port                 = 443
-#           to_port                   = 443
-#           protocol                  = "tcp"
-#           cidr_blocks               = [var.vpc_cidr]
-#         },
-#         {
-#           from_port                 = -1
-#           to_port                   = -1
-#           protocol                  = "icmp"
-#           cidr_blocks               = [var.vpc_cidr]
-#         },
-#       ]
-#     }
-#   }
-# }
+  instance_config = {
+    count                         = var.gitlab_count
+    name                          = var.gitlab_name
+    instance_type                 = var.gitlab_instance_type
+    volume_size                   = var.gitlab_volume_size
+    security_group = {
+      ingress_rules = [
+        {
+          from_port                 = 22
+          to_port                   = 22
+          protocol                  = "tcp"
+          cidr_blocks               = [var.vpc_cidr]
+        },
+        {
+          from_port                 = 80
+          to_port                   = 80
+          protocol                  = "tcp"
+          cidr_blocks               = [var.vpc_cidr]
+        },
+        {
+          from_port                 = 443
+          to_port                   = 443
+          protocol                  = "tcp"
+          cidr_blocks               = [var.vpc_cidr]
+        },
+        {
+          from_port                 = -1
+          to_port                   = -1
+          protocol                  = "icmp"
+          cidr_blocks               = [var.vpc_cidr]
+        },
+      ]
+    }
+  }
+}
 
-# # Jenkins Server
-# module "jenkins_server" {
-#   source                        = "./modules/compute"
-#   vpc_id                        = module.networking.vpc_id
-#   ssh_key_name                  = module.ssh_key.ssh_key_name
-#   subnet_id                     = module.networking.private_subnet_ids[0]
+# Jenkins Server
+module "jenkins_server" {
+  source                        = "./modules/compute"
+  vpc_id                        = module.networking.vpc_id
+  ssh_key_name                  = module.ssh_key.ssh_key_name
+  subnet_id                     = module.networking.private_subnet_ids[0]
   
-#   instance_config = {
-#     count                         = var.jenkins_count
-#     name                          = var.jenkins_name
-#     instance_type                 = var.jenkins_instance_type
-#     volume_size                   = var.jenkins_volume_size
-#     security_group = {
-#       ingress_rules = [
-#         {
-#           from_port                 = 22
-#           to_port                   = 22
-#           protocol                  = "tcp"
-#           cidr_blocks               = [var.vpc_cidr]
-#         },
-#         {
-#           from_port                 = 80
-#           to_port                   = 80
-#           protocol                  = "tcp"
-#           cidr_blocks               = [var.vpc_cidr]
-#         },
-#         {
-#           from_port                 = 443
-#           to_port                   = 443
-#           protocol                  = "tcp"
-#           cidr_blocks               = [var.vpc_cidr]
-#         },
-#         {
-#           from_port                 = -1
-#           to_port                   = -1
-#           protocol                  = "icmp"
-#           cidr_blocks               = [var.vpc_cidr]
-#         },
-#       ]
-#     }
-#   }
-# }
+  instance_config = {
+    count                         = var.jenkins_count
+    name                          = var.jenkins_name
+    instance_type                 = var.jenkins_instance_type
+    volume_size                   = var.jenkins_volume_size
+    security_group = {
+      ingress_rules = [
+        {
+          from_port                 = 22
+          to_port                   = 22
+          protocol                  = "tcp"
+          cidr_blocks               = [var.vpc_cidr]
+        },
+        {
+          from_port                 = 80
+          to_port                   = 80
+          protocol                  = "tcp"
+          cidr_blocks               = [var.vpc_cidr]
+        },
+        {
+          from_port                 = 443
+          to_port                   = 443
+          protocol                  = "tcp"
+          cidr_blocks               = [var.vpc_cidr]
+        },
+        {
+          from_port                 = -1
+          to_port                   = -1
+          protocol                  = "icmp"
+          cidr_blocks               = [var.vpc_cidr]
+        },
+      ]
+    }
+  }
+}
 
-# # Jenkins Agent Server
-# module "jenkins_agent_server" {
-#   source                        = "./modules/compute"
-#   vpc_id                        = module.networking.vpc_id
-#   ssh_key_name                  = module.ssh_key.ssh_key_name
-#   subnet_id                     = module.networking.private_subnet_ids[0]
+# Jenkins Agent Server
+module "jenkins_agent_server" {
+  source                        = "./modules/compute"
+  vpc_id                        = module.networking.vpc_id
+  ssh_key_name                  = module.ssh_key.ssh_key_name
+  subnet_id                     = module.networking.private_subnet_ids[0]
   
-#   instance_config = {
-#     count                         = var.jenkins_agent_count
-#     name                          = var.jenkins_agent_name
-#     instance_type                 = var.jenkins_agent_instance_type
-#     volume_size                   = var.jenkins_agent_volume_size
-#     security_group = {
-#       ingress_rules = [
-#         {
-#           from_port                 = 22
-#           to_port                   = 22
-#           protocol                  = "tcp"
-#           cidr_blocks               = [var.vpc_cidr]
-#         },
-#         {
-#           from_port                 = 80
-#           to_port                   = 80
-#           protocol                  = "tcp"
-#           cidr_blocks               = [var.vpc_cidr]
-#         },
-#         {
-#           from_port                 = 443
-#           to_port                   = 443
-#           protocol                  = "tcp"
-#           cidr_blocks               = [var.vpc_cidr]
-#         },
-#         {
-#           from_port                 = -1
-#           to_port                   = -1
-#           protocol                  = "icmp"
-#           cidr_blocks               = [var.vpc_cidr]
-#         },
-#       ]
-#     }
-#   }
-# }
+  instance_config = {
+    count                         = var.jenkins_agent_count
+    name                          = var.jenkins_agent_name
+    instance_type                 = var.jenkins_agent_instance_type
+    volume_size                   = var.jenkins_agent_volume_size
+    security_group = {
+      ingress_rules = [
+        {
+          from_port                 = 22
+          to_port                   = 22
+          protocol                  = "tcp"
+          cidr_blocks               = [var.vpc_cidr]
+        },
+        {
+          from_port                 = 80
+          to_port                   = 80
+          protocol                  = "tcp"
+          cidr_blocks               = [var.vpc_cidr]
+        },
+        {
+          from_port                 = 443
+          to_port                   = 443
+          protocol                  = "tcp"
+          cidr_blocks               = [var.vpc_cidr]
+        },
+        {
+          from_port                 = -1
+          to_port                   = -1
+          protocol                  = "icmp"
+          cidr_blocks               = [var.vpc_cidr]
+        },
+      ]
+    }
+  }
+}
 
-# # Harbor Server
-# module "harbor_server" {
-#   source                        = "./modules/compute"
-#   vpc_id                        = module.networking.vpc_id
-#   ssh_key_name                  = module.ssh_key.ssh_key_name
-#   subnet_id                     = module.networking.private_subnet_ids[0]
+# Harbor Server
+module "harbor_server" {
+  source                        = "./modules/compute"
+  vpc_id                        = module.networking.vpc_id
+  ssh_key_name                  = module.ssh_key.ssh_key_name
+  subnet_id                     = module.networking.private_subnet_ids[0]
   
-#   instance_config = {
-#     count                         = var.harbor_count
-#     name                          = var.harbor_name
-#     instance_type                 = var.harbor_instance_type
-#     volume_size                   = var.harbor_volume_size
-#     security_group = {
-#       ingress_rules = [
-#         {
-#           from_port                 = 22
-#           to_port                   = 22
-#           protocol                  = "tcp"
-#           cidr_blocks               = [var.vpc_cidr]
-#         },
-#         {
-#           from_port                 = 80
-#           to_port                   = 80
-#           protocol                  = "tcp"
-#           cidr_blocks               = [var.vpc_cidr]
-#         },
-#         {
-#           from_port                 = 443
-#           to_port                   = 443
-#           protocol                  = "tcp"
-#           cidr_blocks               = [var.vpc_cidr]
-#         },
-#         {
-#           from_port                 = -1
-#           to_port                   = -1
-#           protocol                  = "icmp"
-#           cidr_blocks               = [var.vpc_cidr]
-#         },
-#       ]
-#     }
-#   }
-# }
+  instance_config = {
+    count                         = var.harbor_count
+    name                          = var.harbor_name
+    instance_type                 = var.harbor_instance_type
+    volume_size                   = var.harbor_volume_size
+    security_group = {
+      ingress_rules = [
+        {
+          from_port                 = 22
+          to_port                   = 22
+          protocol                  = "tcp"
+          cidr_blocks               = [var.vpc_cidr]
+        },
+        {
+          from_port                 = 80
+          to_port                   = 80
+          protocol                  = "tcp"
+          cidr_blocks               = [var.vpc_cidr]
+        },
+        {
+          from_port                 = 443
+          to_port                   = 443
+          protocol                  = "tcp"
+          cidr_blocks               = [var.vpc_cidr]
+        },
+        {
+          from_port                 = -1
+          to_port                   = -1
+          protocol                  = "icmp"
+          cidr_blocks               = [var.vpc_cidr]
+        },
+      ]
+    }
+  }
+}
 
 # Kubernetes Controller Server
 module "k8s_controller_server" {
@@ -325,8 +327,8 @@ module "k8s_controller_server" {
     name                          = var.k8s_controller_name
     instance_type                 = var.k8s_controller_instance_type
     volume_size                   = var.k8s_controller_volume_size
-    # instance_profile              = module.iam.instance_profile_name_for_k8s_controller.name
-    instance_profile              = data.aws_iam_instance_profile.instance_profile_name_for_k8s_controller.name
+    # iam_instance_profile              = module.iam.instance_profile_name_for_k8s_controller.name
+    iam_instance_profile              = data.aws_iam_instance_profile.instance_profile_name_for_k8s_controller.name
     tags                          = local.tags_for_kubernetes
     security_group = {
       ingress_rules = [
@@ -375,7 +377,7 @@ module "k8s_controller_server" {
         {
           from_port                 = 4789  # Calico networking with VXLAN enabled
           to_port                   = 4789
-          protocol                  = "tcp"
+          protocol                  = "udp"
           cidr_blocks               = [var.vpc_cidr]
         },
         {
@@ -384,6 +386,12 @@ module "k8s_controller_server" {
           protocol                  = "tcp"
           cidr_blocks               = [var.vpc_cidr]
         },
+        # {
+        #   from_port                 = 9443 # AWS Loadbalance Controller Webhook Access
+        #   to_port                   = 9443
+        #   protocol                  = "tcp"
+        #   cidr_blocks               = [var.vpc_cidr]
+        # },
         {
           from_port                 = 9100 # Prometheus
           to_port                   = 9100
@@ -414,8 +422,8 @@ module "k8s_compute_server" {
     instance_type                 = var.k8s_compute_instance_type
     volume_size                   = var.k8s_compute_volume_size
     tags                          = local.tags_for_kubernetes
-    # instance_profile              = module.iam.instance_profile_name_for_k8s_compute.name
-    instance_profile              = data.aws_iam_instance_profile.instance_profile_name_for_k8s_compute.name
+    # iam_instance_profile              = module.iam.instance_profile_name_for_k8s_compute.name
+    iam_instance_profile              = data.aws_iam_instance_profile.instance_profile_name_for_k8s_compute.name
     security_group = {
       ingress_rules = [
         {
@@ -457,7 +465,7 @@ module "k8s_compute_server" {
         {
           from_port                 = 4789  # Calico networking with VXLAN enabled
           to_port                   = 4789
-          protocol                  = "tcp"
+          protocol                  = "udp"
           cidr_blocks               = [var.vpc_cidr]
         },
         {
@@ -472,6 +480,12 @@ module "k8s_compute_server" {
           protocol                  = "tcp"
           cidr_blocks               = [var.vpc_cidr]
         },
+        # {
+        #   from_port                 = 9443 # AWS Loadbalance Controller Webhook Access
+        #   to_port                   = 9443
+        #   protocol                  = "tcp"
+        #   cidr_blocks               = [var.vpc_cidr]
+        # },
         {
           from_port                 = 9100  # Prometheus
           to_port                   = 9100
@@ -498,7 +512,7 @@ locals {
     bastion           = module.bastion_server
     mgmt              = module.mgmt_server
     # gitlab            = module.gitlab_server
-    # jenkins           = module.jenkins_server
+    # jenkins_controller= module.jenkins_server
     # jenkins_agent     = module.jenkins_agent_server
     # harbor            = module.harbor_server
     k8s_controller    = module.k8s_controller_server

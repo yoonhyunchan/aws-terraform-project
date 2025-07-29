@@ -1,0 +1,78 @@
+# -----------------------------------------------------------------------------
+# Networking Setting
+# -----------------------------------------------------------------------------
+aws_region                    = "us-west-2"
+vpc_cidr                      = "10.0.0.0/16"
+
+
+# -----------------------------------------------------------------------------
+# Bastion Server Setting
+# -----------------------------------------------------------------------------
+bastion_name                  = "bastion_server"
+bastion_instance_type         = "t2.micro"
+bastion_volume_size           = 30
+bastion_count                 = 1
+
+# -----------------------------------------------------------------------------
+# Mgmt Server Setting
+# -----------------------------------------------------------------------------
+mgmt_name                  = "mgmt_server"
+mgmt_instance_type         = "t2.micro"
+mgmt_volume_size           = 30
+mgmt_count                 = 1
+
+# -----------------------------------------------------------------------------
+# Gitlab Server Setting
+# -----------------------------------------------------------------------------
+gitlab_name                   = "gitlab_server"
+gitlab_instance_type          = "t2.medium"
+gitlab_volume_size            = 30
+gitlab_count                  = 1
+
+# -----------------------------------------------------------------------------
+# Jenkins Server Setting
+# -----------------------------------------------------------------------------
+jenkins_name                  = "jenkins_server"
+jenkins_instance_type         = "t2.micro"
+jenkins_volume_size           = 30
+jenkins_count                 = 1
+
+# -----------------------------------------------------------------------------
+# Jenkins Agent Server Setting
+# -----------------------------------------------------------------------------
+jenkins_agent_name            = "jenkins_agent_server"
+jenkins_agent_instance_type   = "t2.micro"
+jenkins_agent_volume_size     = 30
+jenkins_agent_count           = 1
+
+# -----------------------------------------------------------------------------
+# Harbor Server Setting
+# -----------------------------------------------------------------------------
+harbor_name                   = "harbor_server"
+harbor_instance_type          = "t2.micro"
+harbor_volume_size            = 30
+harbor_count                  = 1
+
+# -----------------------------------------------------------------------------
+# Kubernetes Controller Server Setting
+# -----------------------------------------------------------------------------
+k8s_controller_name           = "k8s_controller_server"
+k8s_controller_instance_type  = "t2.medium"
+k8s_controller_volume_size    = 30
+k8s_controller_count          = 1
+
+# -----------------------------------------------------------------------------
+# Kubernetes Compute Setting
+# -----------------------------------------------------------------------------
+k8s_compute_name              = "k8s_compute_server"
+k8s_compute_instance_type     = "t2.medium"
+k8s_compute_volume_size       = 30
+k8s_compute_count             = 2
+
+# -----------------------------------------------------------------------------
+# Route53 Setting
+# -----------------------------------------------------------------------------
+
+public_hosted_zone_name       = "example.store"
+public_web_services           = ["harbor", "gitlab", "jenkins"]
+private_hosted_zone_name      = "example.internal"
