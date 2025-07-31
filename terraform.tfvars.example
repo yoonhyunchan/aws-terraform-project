@@ -73,6 +73,6 @@ k8s_compute_count             = 2
 # Route53 Setting
 # -----------------------------------------------------------------------------
 
-public_hosted_zone_name       = "example.store"
-public_web_services           = ["harbor", "gitlab", "jenkins"]
+public_hosted_zone_name       = "example.com"
+# public_web_services           = ["harbor", "gitlab", "jenkins"]  # If Use Reverse Proxy Server
 private_hosted_zone_name      = "example.internal"

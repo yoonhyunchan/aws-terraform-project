@@ -9,10 +9,10 @@ print_step() {
 }
 
 # print_step "1. Terraform 초기화"
-# terraform init
+terraform init
 
 # # print_step "2. Terraform 변경사항 계획(plan)"
-# terraform plan
+terraform plan
 
 # print_step "3. Terraform 적용(apply)"
 terraform apply -auto-approve

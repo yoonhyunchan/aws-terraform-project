@@ -207,14 +207,14 @@ module "jenkins_server" {
           cidr_blocks               = [var.vpc_cidr]
         },
         {
-          from_port                 = 80
-          to_port                   = 80
+          from_port                 = 8080
+          to_port                   = 8080
           protocol                  = "tcp"
           cidr_blocks               = [var.vpc_cidr]
         },
         {
-          from_port                 = 443
-          to_port                   = 443
+          from_port                 = 8443
+          to_port                   = 8443
           protocol                  = "tcp"
           cidr_blocks               = [var.vpc_cidr]
         },
@@ -511,10 +511,10 @@ locals {
   all_compute_modules = {
     bastion           = module.bastion_server
     mgmt              = module.mgmt_server
-    # gitlab            = module.gitlab_server
-    # jenkins_controller= module.jenkins_server
-    # jenkins_agent     = module.jenkins_agent_server
-    # harbor            = module.harbor_server
+    gitlab            = module.gitlab_server
+    jenkins           = module.jenkins_server
+    jenkins_agent     = module.jenkins_agent_server
+    harbor            = module.harbor_server
     k8s_controller    = module.k8s_controller_server
     k8s_compute       = module.k8s_compute_server
   }
