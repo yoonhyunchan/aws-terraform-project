@@ -8,7 +8,7 @@
     <img src="https://raw.githubusercontent.com/yoonhyunchan/yoonhyunchan/refs/heads/main/logos/kubernetes.svg" width="46"/>
 </p>
 
-# Terraform DevOps Infrastructure
+# Terraform DevOps & Kuberntes Infrastructure
 
 This Terraform project deploys a complete DevOps infrastructure on AWS, including CI/CD tools, container registry, and Kubernetes cluster with proper networking and security configurations.
 
