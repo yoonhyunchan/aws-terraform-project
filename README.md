@@ -12,14 +12,24 @@
 
 This Terraform project deploys a complete DevOps infrastructure on AWS, including CI/CD tools, container registry, and Kubernetes cluster with proper networking and security configurations.
 
+## 🚪 Next Step
+**[Ansible for Kubernetes Repository](https://github.com/yoonhyunchan/kubernetes-ansible)** - My Repo<br>
+**[Ansible for CICD Repository](https://github.com/yoonhyunchan/cicd-ansible)** - My Repo
+
+**[[Devops] 05. Gitlab&Jenkins&Harbor Integration (1)
+](https://mon-roman.tistory.com/entry/Devops-04-GitlabJenkinsHarbor-Integration-1)** - My Blog Post<br>
+**[[Devops] 06. Gitlab&Jenkins&Harbor Integration (2)
+](https://mon-roman.tistory.com/entry/Devops-06-GitlabJenkinsHarbor-Integration-2)** - My Blog Post<br>
+**[[Devops] 07. Gitlab&Jenkins&Harbor Integration (3)
+](https://mon-roman.tistory.com/entry/Devops-07-GitlabJenkinsHarbor-Integration-3)** - My Blog Post<br>
+
 ## 🏗️ Infrastructure Overview
 
-This project creates a comprehensive DevOps environment with the following components:
-
 ### Core Infrastructure
-- **VPC** with public and private subnets across multiple availability zones
+- **VPC** with public and private subnets across multiple availability zones with tags for kubernetes Environment
 - **SSH Key Pair** for secure server access
 - **Route53** DNS configuration for both public and private zones
+- **Compute** EC2 Instance & Security Group configuration
 - **IAM Roles** for Kubernetes cluster management
 
 ### Server Components
